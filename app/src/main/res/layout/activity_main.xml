@@ -6,12 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.filebrowser.MainActivity"
-    android:background="#dddddd">
+    android:background="@color/colorComonBackground">
 
     <ListView
         android:id="@+id/listOfFiles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:padding="10dp"
         android:layout_margin="@dimen/margin_listview">
     </ListView>
 

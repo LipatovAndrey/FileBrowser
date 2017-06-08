@@ -1,15 +1,16 @@
 package com.example.filebrowser;
 
-import android.os.Environment;
-import android.util.Log;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,22 +19,10 @@ import java.util.List;
  */
 
 class FilesAdapter extends BaseAdapter {
-    private final File mPath;
-    private List<File> mFileList;
-    public FilesAdapter(File path){
-        mPath = path;
-        mFileList = new ArrayList<>();
-        File[] files = mPath.listFiles();
-        if (files!=null){
-            for (File f : files){
-                if (f.isDirectory()){mFileList.add(f);}
-            }
-            for (File f : files){
-                if (!f.isDirectory()){mFileList.add(f);}
-            }
-        }
 
-
+    private final List<File> mFileList;
+    public FilesAdapter(List<File> fileList){
+        mFileList = fileList;
     }
     @Override
     public int getCount() {
@@ -51,25 +40,49 @@ class FilesAdapter extends BaseAdapter {
         return 0;
     }
 
+    public int getCounTFilesConstaints(File dir){
+        if (dir.listFiles()!=null){
+            return dir.listFiles().length;
+        }else {
+            return 0;
+        }
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+        if (convertView==null){
+            viewHolder = new ViewHolder();
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_of_dir, parent, false);
+            viewHolder.mName = (TextView) convertView.findViewById(R.id.nameOfDir);
+            viewHolder.mFullPathView = (TextView) convertView.findViewById(R.id.fullPath);
+            viewHolder.mFolderImageView = (ImageView) convertView.findViewById(R.id.imageFolder);
+            viewHolder.mCountFiles = (TextView) convertView.findViewById(R.id.CountFiles);
+            convertView.setTag(viewHolder);
+        }
+        viewHolder = (ViewHolder) convertView.getTag();
 
         if (getItem(position).isDirectory()){
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_of_dir, parent, false);
-            TextView nameOfDirectoryView = (TextView) convertView.findViewById(R.id.nameOfDir);
-            TextView infoTextView = (TextView) convertView.findViewById(R.id.info);
-            nameOfDirectoryView.setText(getItem(position).getName());
-            infoTextView.setText(getItem(position).getAbsolutePath());
-
-
-        }
-        else{
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_of_files, parent, false);
+            viewHolder.mName.setText(getItem(position).getName());
+            viewHolder.mFullPathView.setText(getItem(position).getAbsolutePath());
+            viewHolder.mFolderImageView.setImageResource(R.mipmap.ic_folder);
+            viewHolder.mCountFiles.setText("Files inside " + String.valueOf(getCounTFilesConstaints(getItem(position))));
+            } else {
+                    viewHolder.mName.setText(getItem(position).getName());
+                    viewHolder.mName.setPadding(30,0,0,0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                viewHolder.mName.setTextAppearance(R.style.FileText);
+            }
             convertView.setClickable(true);
-            TextView nameOfDirectoryView = (TextView) convertView.findViewById(R.id.nameOfFile);
-            nameOfDirectoryView.setText(getItem(position).getName());
+            }
 
-        }
         return convertView;
     }
+    private class ViewHolder{
+        TextView mFullPathView;
+        TextView mName;
+        TextView mCountFiles;
+        ImageView mFolderImageView;
+    }
+
 }
