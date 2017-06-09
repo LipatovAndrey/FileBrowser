@@ -9,9 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,7 +51,7 @@ class FilesAdapter extends BaseAdapter {
         if (convertView==null){
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_of_dir, parent, false);
-            viewHolder.mName = (TextView) convertView.findViewById(R.id.nameOfDir);
+            viewHolder.mNameView = (TextView) convertView.findViewById(R.id.nameOfDir);
             viewHolder.mFullPathView = (TextView) convertView.findViewById(R.id.fullPath);
             viewHolder.mFolderImageView = (ImageView) convertView.findViewById(R.id.imageFolder);
             viewHolder.mCountFiles = (TextView) convertView.findViewById(R.id.CountFiles);
@@ -63,15 +60,15 @@ class FilesAdapter extends BaseAdapter {
         viewHolder = (ViewHolder) convertView.getTag();
 
         if (getItem(position).isDirectory()){
-            viewHolder.mName.setText(getItem(position).getName());
+            viewHolder.mNameView.setText(getItem(position).getName());
             viewHolder.mFullPathView.setText(getItem(position).getAbsolutePath());
             viewHolder.mFolderImageView.setImageResource(R.mipmap.ic_folder);
             viewHolder.mCountFiles.setText("Files inside " + String.valueOf(getCounTFilesConstaints(getItem(position))));
             } else {
-                    viewHolder.mName.setText(getItem(position).getName());
-                    viewHolder.mName.setPadding(30,0,0,0);
+                    viewHolder.mNameView.setText(getItem(position).getName());
+                    viewHolder.mNameView.setPadding(30,0,0,0);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                viewHolder.mName.setTextAppearance(R.style.FileText);
+                viewHolder.mNameView.setTextAppearance(R.style.FileText);
             }
             convertView.setClickable(true);
             }
@@ -80,7 +77,7 @@ class FilesAdapter extends BaseAdapter {
     }
     private class ViewHolder{
         TextView mFullPathView;
-        TextView mName;
+        TextView mNameView;
         TextView mCountFiles;
         ImageView mFolderImageView;
     }
